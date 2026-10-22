@@ -1,9 +1,26 @@
-export default function TicketItem() {
+
+import { useSolicitudes } from "../context/SolicitudesContext";
+import type { Solicitud } from "../types/solicitudType";
+
+type TicketItemProps = {
+  solicitud: Solicitud
+}
+
+export default function TicketItem({ solicitud }: TicketItemProps) {
+  const { changeStatusSolicitud, deleteSolicitud } = useSolicitudes()
+
   return (
     <article className="ticket">
-      <div className="ticket-top"><span className="ticket-id">Solicitud de ejemplo</span><div className="badges"><span className="badge priority-alta">Alta</span><span className="badge status-pendiente">Pendiente</span></div></div>
-      <h3>No puedo acceder al correo</h3><p className="requester">Solicitante: Ana López</p>
-      <div className="ticket-actions"><button className="button secondary" type="button">Marcar como resuelta</button><button className="button danger" type="button">Eliminar</button></div>
+      <div className="ticket-top">
+        <span className="ticket-id">Solicitud</span>
+        <div className="badges">
+          <span className={`badge priority-${solicitud.priority}`}>{solicitud.priority}</span>
+          <span className={`badge status-${solicitud.status}`}>{solicitud.status}</span></div></div>
+      <h3 className="description">
+        {solicitud.description}</h3>
+        <p className="requester">Solicitante: {solicitud.requester}</p>
+      <div className="ticket-actions">
+        {solicitud.status === "pendiente" && <button className="button secondary" type="button" onClick={() => changeStatusSolicitud(solicitud.id)}>Marcar como resuelta</button>}<button className="button danger" type="button" onClick={() => deleteSolicitud(solicitud.id)}>Eliminar</button></div>
     </article>
-  );
+  )
 }
